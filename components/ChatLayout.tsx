@@ -152,17 +152,23 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
             </div>
             </div>
 
-            <div 
-                className={theme.chatContainer}
-                style={{
-                    backgroundImage: theme.backgroundImage && theme.backgroundImage !== 'none' ? theme.backgroundImage : undefined,
-                    backgroundSize: theme.backgroundSize || 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat'
-                }}
-            >
+            <div className={theme.chatContainer}>
+                {/* Background Image Layer with Ken Burns Effect */}
                 {theme.backgroundImage && theme.backgroundImage !== 'none' && (
-                    <div className="absolute inset-0 bg-black/30 pointer-events-none" />
+                    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+                        <div 
+                             className="absolute inset-0 w-full h-full animate-ken-burns motion-reduce:animate-none"
+                             style={{
+                                backgroundImage: theme.backgroundImage,
+                                backgroundSize: theme.backgroundSize || 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                transformOrigin: 'center center',
+                             }}
+                        />
+                        {/* Dark Overlay for readability */}
+                        <div className="absolute inset-0 bg-black/30" />
+                    </div>
                 )}
                 
                 {/* 1. Main Blocking Loading Indicator (Coding Phase) */}
@@ -190,7 +196,7 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
                      </div>
                 )}
 
-                <div className={theme.messageList}>
+                <div className={`${theme.messageList} relative z-10`}>
                 {messages.map((msg) => (
                     <div
                     key={msg.id}
@@ -213,7 +219,7 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
                 <div ref={messagesEndRef} />
                 </div>
 
-                <div className={theme.inputContainer}>
+                <div className={`${theme.inputContainer} relative z-10`}>
                 <div className={theme.inputWrapper}>
                     <input
                     type="text"
@@ -243,6 +249,18 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
   return (
     <>
       <HeadInjector html={theme.headHtml} />
+      
+      {/* Ken Burns Keyframes */}
+      <style>{`
+        @keyframes ken-burns {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .animate-ken-burns {
+            animation: ken-burns 40s ease-in-out infinite;
+        }
+      `}</style>
       
       {theme.customCSS && (
         <style dangerouslySetInnerHTML={{ __html: theme.customCSS }} />
