@@ -1,0 +1,5 @@
+{
+  "name": "AI Self-Designer",
+  "description": "A chat application where the AI redesigns its own interface in real-time based on your commands.",
+  "requestFramePermissions": []
+}
